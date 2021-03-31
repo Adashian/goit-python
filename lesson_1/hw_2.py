@@ -107,7 +107,7 @@
 # offset = int(input("Введите сдвиг: "))
 # encoded_message = ""
 # if offset > 26:
-#     offset -= 26
+#     offset %= 26
 # for ch in message:
 #     if 64 < ord(ch) < 91:
 #         if ord(ch) + offset > 90:
