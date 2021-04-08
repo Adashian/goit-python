@@ -20,47 +20,23 @@ def check_dir(path):
             x = pathlib.Path(i)
             x = x.suffix
             print(f'Найден файл {i} с расширением {x}')
-            if x.lower() in types[0]:
-                try:
+            try:
+                if x.lower() in types[0]:
                     move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Pictures')
-                except:
-                    print(f'Такой файл уже существует ')
-                    continue
-            elif x.lower() in types[1]:
-                try:
+                elif x.lower() in types[1]:
                     move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Video')
-                except:
-                    print(f'Такой файл уже существует ')
-                    continue
-            elif x.lower() in types[2]:
-                try:
+                elif x.lower() in types[2]:
                     move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Documents')
-                except:
-                    print(f'Такой файл уже существует ')
-                    continue
-            elif x.lower() in types[3]:
-                try:
+                elif x.lower() in types[3]:
                     move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Music')
-                except:
-                    print(f'Такой файл уже существует ')
-                    continue
-            elif x.lower() in types[4]:
-                try:
+                elif x.lower() in types[4]:
                     move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Archives')
-                except:
-                    print(f'Такой файл уже существует ')
-                    continue
-            else:
-                try:
+                else:
                     move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Other')
-                except:
-                    print(f'Такой файл уже существует ')
-                    continue
+            except:
+                print(f'Такой файл уже существует ')
+                continue
 
 
 def move_file(path, destination):
     move(path, destination)
-
-
-set_path = '/home/yaroslav/PycharmProjects/goit-python/test_dir'
-check_dir(set_path)
