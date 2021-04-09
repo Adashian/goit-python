@@ -1,5 +1,4 @@
 import os
-import pathlib
 from shutil import move
 
 
@@ -17,19 +16,19 @@ def check_dir(path):
             check_dir(path + '/' + i)
             print(f'Возвращаемся в {path}')
         elif os.path.isfile(path+'/'+i):
-            x = pathlib.Path(i)
-            x = x.suffix
-            print(f'Найден файл {i} с расширением {x}')
+            file_name = os.path.basename(i)
+            file_type = os.path.splitext(file_name)[1]
+            print(f'Найден файл {i} с расширением {file_type}')
             try:
-                if x.lower() in types[0]:
+                if file_type.lower() in types[0]:
                     move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Pictures')
-                elif x.lower() in types[1]:
+                elif file_type.lower() in types[1]:
                     move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Video')
-                elif x.lower() in types[2]:
+                elif file_type.lower() in types[2]:
                     move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Documents')
-                elif x.lower() in types[3]:
+                elif file_type.lower() in types[3]:
                     move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Music')
-                elif x.lower() in types[4]:
+                elif file_type.lower() in types[4]:
                     move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Archives')
                 else:
                     move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Other')
@@ -40,3 +39,7 @@ def check_dir(path):
 
 def move_file(path, destination):
     move(path, destination)
+
+
+set_path = '/home/yaroslav/PycharmProjects/goit-python/test_dir'
+check_dir(set_path)
