@@ -42,7 +42,7 @@ def check_dir(path):
                 elif file_type.lower() in types[3]:
                     os.replace(path+'/'+i, f'test/Music/{file_name+file_type}')
                 elif file_type.lower() in types[4]:
-                    shutil.unpack_archive(path+'/'+i, f'test/Archives/{file_name+file_type}')
+                    shutil.unpack_archive(path+'/'+i, f'test/Archives/{file_name}')
                     os.remove(path+'/'+i)
             except Exception:
                 print(f'Что-то пошло не так...')
