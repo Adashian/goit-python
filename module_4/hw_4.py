@@ -21,17 +21,17 @@ def check_dir(path):
             print(f'Найден файл {i} с расширением {file_type}')
             try:
                 if file_type.lower() in types[0]:
-                    move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Pictures')
+                    move_file(path + '/' + i, target_rel_path + '\\Изображения')
                 elif file_type.lower() in types[1]:
-                    move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Video')
+                    move_file(path + '/' + i, target_rel_path + '\\Видео')
                 elif file_type.lower() in types[2]:
-                    move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Documents')
+                    move_file(path + '/' + i, target_rel_path + '\\Документы')
                 elif file_type.lower() in types[3]:
-                    move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Music')
+                    move_file(path + '/' + i, target_rel_path + '\\Музыка')
                 elif file_type.lower() in types[4]:
-                    move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Archives')
+                    move_file(path + '/' + i, target_rel_path + '\\Архивы')
                 else:
-                    move_file(path + '/' + i, '/home/yaroslav/PycharmProjects/goit-python/test/Other')
+                    move_file(path + '/' + i, target_rel_path + '\\Другое')
             except:
                 print(f'Такой файл уже существует ')
                 continue
@@ -41,5 +41,9 @@ def move_file(path, destination):
     move(path, destination)
 
 
-set_path = '/home/yaroslav/PycharmProjects/goit-python/test_dir'
-check_dir(set_path)
+set_path = 'E:\\python\\goit-python\\module_4\\Хлам'
+rel_path = os.path.relpath(set_path)
+target_path = 'E:\\python\\goit-python\\module_4\\Отсортированный_хлам'
+target_rel_path = os.path.relpath(target_path)
+
+check_dir(rel_path)
