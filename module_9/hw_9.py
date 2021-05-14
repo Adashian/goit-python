@@ -1,52 +1,90 @@
-users = {}
+USERS = dict()
 
 
-def add_contact(name, number):
-    users[name] = int(number)
-
-
-def change_contact(name, number):
-    users[name] = number
-
-
-def show_phone(name):
-    return users.get(name, ['Name not found'])
-
-
-def all_contacts():
-    return users.items()
-
-
-while True:
-    command = input('How can I help you? \n').casefold()
-    command = command.split()
-    brake_command = ['.', 'exit', 'close', 'good bye']
-    if command[0] in brake_command:
-        print('Good bye!')
-        break
-    elif command == 'hello':
-        print('How can I help you?')
-
-    elif command[0] == 'add':
+def input_error(func):              # Функция обработчик ошибок
+    def inner(*args):
         try:
-            add_contact(command[1], command[2])
+            return func(*args)
+        except KeyError:
+            return 'User not found'
+        except ValueError:
+            return 'Not supported items'
         except IndexError:
-            print('Give me name and phone please')
-        except ValueError:
-            print('Number must include only digits')
-        else:
-            print('Contact was successfully added')
+            return 'Input name and number in space'
+    return inner
 
-    elif command[0] == 'change':
+
+@input_error
+def add_contact(args):
+    name = str(args[0]).title()
+    num = args[1]
+    USERS[name] = int(num)
+    return f'Contact {name} was successfully added!'
+
+
+@input_error
+def change_contact(x):
+    name = str(x[0]).title()
+    num = x[1]
+    USERS[name] = int(num)
+    return f'Contact {name} was successfully changed. New number is {num}.'
+
+
+@input_error
+def show_phone(x):
+    name = str(x[0]).title()
+    return USERS.get(name, ['Name not found'])
+
+
+def all_contacts(x):
+    result = ''
+    for name, phone in USERS.items():
+        result += f'{name}: {phone}\n'
+    return result
+
+
+def hello(x):
+    return 'How can I help you?'
+
+
+commands = {
+        'hello': hello,
+        'add': add_contact,
+        'change': change_contact,
+        'phone': show_phone,
+        'show all': all_contacts,
+    }
+
+
+def main():
+
+    while True:
+        user_input = input().casefold()
+        if user_input == '.':
+            break
+
+        brake_commands = ['exit', 'close', 'good bye']
+        if user_input in brake_commands:
+            print('Good bye!')
+            break
+
+        splt_user_input = user_input.split()
+
         try:
-            change_contact(command[1], command[2])
-        except ValueError:
-            print('Number must include only digits')
+            if splt_user_input[0] == 'show' and splt_user_input[1] == 'all':
+                command = f'{splt_user_input[0]} {splt_user_input[1]}'
+                splt_user_input.clear()
+            else:
+                command = splt_user_input.pop(0)
+        except IndexError:
+            print('Bad request.')
+        try:
+            handler = commands.get(command)(splt_user_input)
+        except TypeError as error:
+            print(error, 'Supporting next commands: add, hello, change, phone, show_all')
         else:
-            print('Contact was successfully changed')
+            print(handler)
 
-    elif command[0] == 'phone':
-        print(show_phone(command[1]))
 
-    elif command[0] == 'show' and command[1] == 'all':
-        print(*all_contacts())
+if __name__ == '__main__':
+    main()
