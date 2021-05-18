@@ -69,7 +69,7 @@ def main():
             break
 
         splt_user_input = user_input.split()
-
+        command = None
         try:
             if splt_user_input[0] == 'show' and splt_user_input[1] == 'all':
                 command = f'{splt_user_input[0]} {splt_user_input[1]}'
