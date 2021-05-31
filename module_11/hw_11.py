@@ -1,32 +1,33 @@
 from collections import UserDict
 from datetime import datetime
+import re
 
 
 class AddressBook(UserDict):
-    page_len = 5
 
     def add_record(self, key, values):
-        self.data[Record.__name__] = key, values
+        self.data[key] = values
+        Phone()._phones = []
+        Birthday()._birthday = ''
 
-    def __iter__(self):
-        page = []
-        for i in self.data:
-            page.append(i)
-            if self.page_len == len(page):
-                yield page
-                page = []
-        if page:
-            yield page
+    def iterable(self, n=3):
+        page = ''
+        i = 0
+        while i < n:
+            page += next(self.data)
+        yield page
 
 
 class Record:
 
-    def __init__(self, name, phone=None, birthday=None):
+    def __init__(self, name, phone=None, birthday=''):
         self.name = Name(name)
-        self.phones = Phone().phones
-        self.phones.append(phone)
-        self.birthday = Birthday
-
+        self.phones = Phone()._phones
+        if phone:
+            self.phones.append(phone)
+        self.birthday = Birthday()
+        if birthday:
+            self.birthday.set_birthday(birthday)
 
     def add_phone(self, phone):
         self.phones.append(phone)
@@ -60,26 +61,39 @@ class Name(Field):
     def __init__(self, name):
         self.name = name
 
+    def __repr__(self):
+        return self.name
+
 
 class Phone(Field):
+    _phones = list()
 
-    def __init__(self):
-        self.phones = []
+    @property
+    def phones(self):
+        return self._phones
+
+    @phones.setter
+    def phones(self, phone):
+        try:
+            validate = re.fullmatch('[+]\d{5,13}|\d{5,13}', phone)
+            if validate:
+                self._phones.append(phone)
+            else:
+                print(f'Expected number in format +ХХХХХХХХХХХ or ХХХХХХХХХХ and 5-13 digits')
+        except:
+            print('Bad request, expected string')
 
 
 class Birthday(Field):
-    __birthday = None
+    _birthday = ''
 
-    @property
-    def birthday(self):
+    def set_birthday(self, birthday):
         try:
-            return self.__birthday.strftime('%d.%m.%Y')
-        except:
-            print('Birthday don\'t established')
-
-    @birthday.setter
-    def birthday(self, birthday):
-        try:
-            self.__birthday = datetime.strptime(birthday, '%d.%m.%Y')
+            self._birthday = datetime.strptime(birthday, '%d.%m.%Y')
         except Exception:
-            print("Incorrect format, expected day.month.year")
+            print("Incorrect birthday format, expected day.month.year")
+
+    def __repr__(self):
+        if self._birthday:
+            return self._birthday.strftime('%d.%m.%Y')
+        return f'Birthday don\'t established'
