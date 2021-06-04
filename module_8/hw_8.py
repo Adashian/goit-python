@@ -4,7 +4,7 @@ from collections import defaultdict
 
 def congratulate(users):
     day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    this_week = date.today().isocalendar().week
+    this_week = date.today().isocalendar().week  # От этой даты совершается проверка ДР на следующей недели
     result = defaultdict(list)
 
     for user in users:
@@ -31,10 +31,14 @@ def congratulate(users):
 
 
 test_data = [
-    {'name': 'Bill', 'birthday': date(2012, 5, 8)},
-    {'name': 'Joshua', 'birthday': date(1992, 5, 9)},
-    {'name': 'Alexandr', 'birthday': date(1995, 5, 10)},
-    {'name': 'Yaroslav', 'birthday': date(1994, 5, 13)}
+    {'name': 'Andriy', 'birthday': date(1994, 5, 8)},
+    {'name': 'Ivan', 'birthday': date(1992, 8, 5)},
+    {'name': 'Georg', 'birthday': date(1995, 2, 12)},
+    {'name': 'Yaroslav', 'birthday': date(1994, 8, 8)},
+    {'name': 'Anton', 'birthday': date(1993, 10, 21)},
+    {'name': 'Kirill', 'birthday': date(1992, 5, 14)},
+    {'name': 'Alexandr', 'birthday': date(1995, 5, 8)},
+    {'name': 'August', 'birthday': date(1994, 6, 27)}
 ]
 
 congratulate(test_data)
