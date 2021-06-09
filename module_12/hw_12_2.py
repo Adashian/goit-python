@@ -6,9 +6,8 @@ from datetime import datetime
 
 class AddressBook(UserDict):
 
-    def __init__(self, file):
+    def __init__(self):
         super().__init__()
-        self.__dict__ = self.deserialized_data()
         self.num = 0
 
     def add_record(self, record):
@@ -18,7 +17,7 @@ class AddressBook(UserDict):
         return self
 
     def __next__(self):
-        res = self.data[self.num]
+        res = self.data.items()
         if self.num >= len(self.data):
             raise StopIteration
 
@@ -28,14 +27,14 @@ class AddressBook(UserDict):
     def find_contact(self, obj: str):
         self.result = []
         for key, value in self.data.items():
+            print(f'KEY - {key}, VALUE - {value}')
             if obj.casefold() == str(key).casefold() or obj in value:
                 self.result.append(self.data.get(key))
         return self.result
 
     def deserialized_data(self):
         with open('test.txt', 'rb') as f:
-            result = pickle.load(f)
-        return result
+            self.data = pickle.load(f)
 
     def serialized_data(self):
         with open('test.txt', 'wb') as f:
@@ -128,7 +127,7 @@ class Birthday(Field):
             print("Incorrect birthday format, expected day.month.year")
 
     def __repr__(self):
-        return f'Birthday date - {self.__birthday}'
+        return f'Birthday date - {self.__birthday.date()}'
 
 
 person = Name('Ivan')
