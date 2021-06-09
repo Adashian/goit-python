@@ -9,18 +9,27 @@ class AddressBook(UserDict):
     def __init__(self, file):
         super().__init__()
         self.__dict__ = self.deserialized_data()
+        self.num = 0
 
     def add_record(self, record):
         self.data[record.name] = record.phones, record.birthday
 
     def __iter__(self):
-        return iter(self.data)
+        return self
 
-    def find_contact(self, obj):
+    def __next__(self):
+        res = self.data[self.num]
+        if self.num >= len(self.data):
+            raise StopIteration
+
+        self.num += 1
+        return res
+
+    def find_contact(self, obj: str):
         self.result = []
         for key, value in self.data.items():
-            if obj == key or obj in value:
-                self.result.append(self.data[key])
+            if obj.casefold() == str(key).casefold() or obj in value:
+                self.result.append(self.data.get(key))
         return self.result
 
     def deserialized_data(self):
