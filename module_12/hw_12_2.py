@@ -6,18 +6,15 @@ from datetime import datetime
 
 class AddressBook(UserDict):
 
-    def __init__(self):
+    def __init__(self, file):
         super().__init__()
+        self.__dict__ = self.deserialized_data()
 
     def add_record(self, record):
         self.data[record.name] = record.phones, record.birthday
 
-    def iterator(self, n=1):
-        page = ''
-        i = 0
-        while i < n:
-            page += next(self.data)
-        yield page
+    def __iter__(self):
+        return iter(self.data)
 
     def find_contact(self, obj):
         self.result = []
@@ -25,6 +22,15 @@ class AddressBook(UserDict):
             if obj == key or obj in value:
                 self.result.append(self.data[key])
         return self.result
+
+    def deserialized_data(self):
+        with open('test.txt', 'rb') as f:
+            result = pickle.load(f)
+        return result
+
+    def serialized_data(self):
+        with open('test.txt', 'wb') as f:
+            pickle.dump(self, f)
 
 
 class Record:
@@ -77,7 +83,7 @@ class Phone(Field):
     def phone(self, value):
         try:
             treatment = (value.strip()
-                         .removeprefix('+')
+                         .replace('+', '')
                          .replace(')', '')
                          .replace('(', '')
                          .replace('-', '')
@@ -88,8 +94,8 @@ class Phone(Field):
                 self.__phones.append(treatment)
             else:
                 print(f'Expected number in format +ХХХХХХХХХХХ or ХХХХХХХХХХ and 5-13 digits')
-        except Exception:
-            print('Bad request, expected string')
+        except Exception as error:
+            print(f'Bad request, expected string. {error}')
 
     def __repr__(self):
         return f'Numbers list - {self.__phones}'
