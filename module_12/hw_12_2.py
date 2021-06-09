@@ -12,6 +12,7 @@ class AddressBook(UserDict):
 
     def add_record(self, record):
         self.data[record.name] = record.phones, record.birthday
+        self.serialized_data()
 
     def __iter__(self):
         return self
@@ -25,20 +26,20 @@ class AddressBook(UserDict):
         return res
 
     def find_contact(self, obj: str):
-        self.result = []
+        result = []
         for key, value in self.data.items():
-            print(f'KEY - {key}, VALUE - {value}')
-            if obj.casefold() == str(key).casefold() or obj in value:
-                self.result.append(self.data.get(key))
-        return self.result
+            str_data = f'{key} {value}'
+            if re.search(obj, str_data):
+                result.append(str_data)
+        return result
 
     def deserialized_data(self):
-        with open('test.txt', 'rb') as f:
+        with open('test.pickle', 'rb') as f:
             self.data = pickle.load(f)
 
     def serialized_data(self):
-        with open('test.txt', 'wb') as f:
-            pickle.dump(self, f)
+        with open('test.pickle', 'wb') as f:
+            pickle.dump(self.data, f)
 
 
 class Record:
@@ -112,12 +113,12 @@ class Phone(Field):
 class Birthday(Field):
 
     def __init__(self, birthday: str):
-        self.__birthay = None
+        self.__birthday = None
         self.birthday = birthday
 
     @property
     def birthday(self):
-        return self.__birthay
+        return self.__birthday
 
     @birthday.setter
     def birthday(self, value):
@@ -130,9 +131,4 @@ class Birthday(Field):
         return f'Birthday date - {self.__birthday.date()}'
 
 
-person = Name('Ivan')
-phone = Phone('+380988910110')
-birthday = Birthday('22.05.1992')
-rec = Record(person, phone, birthday)
 book = AddressBook()
-book.add_record(rec)
