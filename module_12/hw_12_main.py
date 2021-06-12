@@ -23,7 +23,6 @@ def input_error(func):
 def add_contact(args):
     '''Добавляет новый контакт.'''
     phone = Phone(args[1])
-    print(phone)
     record = Record(str(args[0]).title())
     record.add_phone(phone)
     bd = input('Введи дату рождения в формате "день-месяц-год" или просто нажми Enter для пропуска...\n')
