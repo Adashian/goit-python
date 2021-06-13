@@ -48,9 +48,10 @@ def show_phone(x):
     return USERS.get(name, ['Name not found'])
 
 
-def all_contacts(n):
+def all_contacts(value):
     '''Отображает все контакты.'''
-    n = n[0] if n else 3
+    n = value[0] if value else 3
+    print(n)
     print(f'Всего в книге {len(USERS)} контактов.')
     for name in USERS.iterable(n):
         print(*name)
@@ -65,13 +66,16 @@ def hello(x):
 
 
 def load_data(x):
-    with open('test.pickle', 'rb') as f:
-        global USERS
-        USERS.update(pickle.load(f))
+    try:
+        with open('book.pickle', 'rb') as f:
+            global USERS
+            USERS.update(pickle.load(f))
+    except FileNotFoundError:
+        print('Записи не найдено.')
 
 
 def save_data(x):
-    with open('test.pickle', 'wb') as f:
+    with open('book.pickle', 'wb') as f:
         pickle.dump(USERS, f)
 
 
@@ -90,36 +94,53 @@ def content(n):
     USERS.add_fake_records(100)
 
 
+def help():
+    print('''
+    Добро пожалова в апк телефонная книга. Здесь ты можешь сохранить контакт, указав имя, один или несколько
+    телефонов и дату рождения. 
+    Поддерживаемые комманды: 
+    1. hello - Обычное приветствие.
+    2. add - Добавляет контакт в книгу. Пример ввода "add Дмитрий +380981234567". Дальше будет возможность
+    ввести дату рождения контакта.
+    3. info - Отображает информацию по контакту. Пример ввода "info Дмитрий". 
+    4. all - Вывод всех имеющихся контактов в телефонной книге. Реализована пагинация по умолчанию в 3 контакта, можно
+     передать значение пагинации. Пример ввода "all 5".
+    5. save - Перезаписывает книгу в файл book.pickle 
+    6. load - Подгружает ранее записанную книгу, если книги не существует, обрабатывает ошибку.
+    7. find - Поиск контактов по паттерну. 
+    8. content - Функция для тестирования, генерирует 100 тестовых записей, не принимает никаких параметров.
+    9. help - Описание функционала.
+    10. exit\\close - Завершение работы.(Книга автоматически не сохраняется, необходимо использовать комманду save)''')
+
+
 commands = {
     'hello': hello,
     'add': add_contact,
     'info': show_phone,
-    'show all': all_contacts,
+    'all': all_contacts,
     'save': save_data,
     'load': load_data,
     'find': find,
-    'content': content
+    'content': content,
+    'help': help
 }
 
 
 def main():
+    help()
     while True:
         user_input = input().casefold()
         if user_input == '.':
             break
 
-        brake_commands = ['exit', 'close', 'good bye']
+        brake_commands = ['exit', 'close']
         if user_input in brake_commands:
             print('Good bye!')
             break
 
         splt_user_input = user_input.split()
         try:
-            if splt_user_input[0] == 'show' and splt_user_input[1] == 'all':
-                command = f'{splt_user_input[0]} {splt_user_input[1]}'
-                splt_user_input.clear()
-            else:
-                command = splt_user_input.pop(0)
+            command = splt_user_input.pop(0)
         except IndexError:
             return 'Команда не распознана'
         try:
