@@ -5,7 +5,6 @@ USERS = AddressBook()
 
 
 def input_error(func):
-    '''Обработчик ошибок.'''
     def inner(*args):
         try:
             return func(*args)
@@ -21,7 +20,6 @@ def input_error(func):
 
 @input_error
 def add_contact(args):
-    '''Добавляет новый контакт.'''
     phone = Phone(args[1])
     record = Record(str(args[0]).title())
     record.add_phone(phone)
@@ -43,13 +41,11 @@ def add_contact(args):
 
 @input_error
 def show_phone(x):
-    '''Отображает информацию по контакту.'''
     name = str(x[0]).title()
     return USERS.get(name, ['Name not found'])
 
 
 def all_contacts(value):
-    '''Отображает все контакты.'''
     n = value[0] if value else 3
     print(n)
     print(f'Всего в книге {len(USERS)} контактов.')
@@ -86,7 +82,7 @@ def find(value):
         return 'Не найдено'
     pretty_view = ''
     for contact in result:
-         pretty_view += contact + '\n'
+        pretty_view += contact + '\n'
     return pretty_view
 
 
